@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -60,6 +61,11 @@ class TaskDataWrap(object):
 
         
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='main')
+    parser.add_argument('--label_path', type=str, required=True)
+    parser.add_argument('--embed_name', type=str, required=True,
+                        choices=['sbert', 'openai'])
+    args = parser.parse_args()
 
     num_epochs = 100
     num_workers = 2
@@ -68,26 +74,37 @@ if __name__ == "__main__":
 
     device = 'cuda:0'
 
-    label_path = '../Data_Paper/test_sample_data_0509_split_0-reinforce-0514.tsv'
+    label_path = args.label_path
     label_data = pd.read_csv(label_path, sep='\t')
 
     train_data = label_data[label_data['demon_flag']!=0]
     test_data  = label_data[label_data['demon_flag']==0]
 
     train_knowledge_list = train_data['query_instruction_english'].tolist()
-    # train_knowledge_embed = textlist_openaiembed(train_knowledge_list, "text-embedding-3-small")
-    train_knowledge_embed = textlist_sbertembed(train_knowledge_list, "sentence-transformers/all-mpnet-base-v2")
+    if args.embed_name == 'sbert':
+        train_knowledge_embed = textlist_sbertembed(train_knowledge_list, "sentence-transformers/all-mpnet-base-v2")
+    else:
+        train_knowledge_embed = textlist_openaiembed(train_knowledge_list, "text-embedding-3-small")
+    
     train_question_list = train_data['problem_clean_english'].tolist()
-    # train_question_embed = textlist_openaiembed(train_question_list, "text-embedding-3-small")
-    train_question_embed = textlist_sbertembed(train_question_list, "sentence-transformers/all-mpnet-base-v2")
+    if args.embed_name == 'sbert':
+        train_question_embed = textlist_sbertembed(train_question_list, "sentence-transformers/all-mpnet-base-v2")
+    else:
+        train_question_embed = textlist_openaiembed(train_question_list, "text-embedding-3-small")
     train_label = train_data['expert_judge'].tolist()
 
     test_knowledge_list = test_data['query_instruction_english'].tolist()
-    # test_knowledge_embed = textlist_openaiembed(test_knowledge_list, "text-embedding-3-small")
-    test_knowledge_embed = textlist_sbertembed(test_knowledge_list, "sentence-transformers/all-mpnet-base-v2")
+    if args.embed_name == 'sbert':
+        test_knowledge_embed = textlist_sbertembed(test_knowledge_list, "sentence-transformers/all-mpnet-base-v2")
+    else:
+        test_knowledge_embed = textlist_openaiembed(test_knowledge_list, "text-embedding-3-small")
+    
     test_question_list = test_data['problem_clean_english'].tolist()
-    # test_question_embed = textlist_openaiembed(test_question_list, "text-embedding-3-small")
-    test_question_embed = textlist_sbertembed(test_question_list, "sentence-transformers/all-mpnet-base-v2")
+    if args.embed_name == 'sbert':
+        test_question_embed = textlist_sbertembed(test_question_list, "sentence-transformers/all-mpnet-base-v2")
+    else:
+        test_question_embed = textlist_openaiembed(test_question_list, "text-embedding-3-small")
+    
     test_label = test_data['expert_judge'].tolist()
     
     train_data = TaskData(train_knowledge_embed,train_question_embed,train_label)

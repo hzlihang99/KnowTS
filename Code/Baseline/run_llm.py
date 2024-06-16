@@ -30,7 +30,6 @@ def update_fewshot(zeroshot_messages, fewshot_select):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='main')
-    parser.add_argument('--config_path', type=str, required=True, help='configuration path.')
     parser.add_argument('--label_path', type=str, required=True)
     parser.add_argument('--model_name', type=str, required=True)
     parser.add_argument("--prompt_style", type=str, default='cot',

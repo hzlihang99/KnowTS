@@ -3,19 +3,9 @@ data:
   fewshot_maxsize: 2
   label_path: "../../Data/data.tsv"
 
-ppo_agent:
-  model_name: 'lstm'
+retriver:
   input_dim: 1536
   hidden_dim: 64
-  n_layers: 2
-  dropout: 0.5
-  
-  rewards_0: 1.0
-  rewards_1: 1.0
-
-  K_epochs: 80
-  eps_clip: 0.2
-  gamma: 0.99
 
 llm_agent:
   model_name: mistralai/Mistral-7B-Instruct-v0.2
@@ -23,15 +13,13 @@ llm_agent:
 
 general:
   back_every_steps: 2
-  experiment_name: 'mistral-7b-2reward-11-ppo-lstm-gamma-0.99-maxlen-2-0514-mix'
+  experiment_name: 'mistral-7b-promptpg-maxlen-2-0514-mix'
 
 train:
   n_epochs: 20
   batch_size: 256
-
-  lr_actor: 0.0003
-  lr_critic: 0.001
-  lr_encode: 0.001
+  learning_rate: 0.001
+  
 
 valid:
   batch_size: 2056

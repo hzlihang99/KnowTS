@@ -3,31 +3,22 @@ data:
   fewshot_maxsize: 2
   label_path: "../../Data/data.tsv"
 
-ppo_agent:
-  model_name: 'lstm'
+retriver:
   input_dim: 1536
   hidden_dim: 64
-  n_layers: 2
-  dropout: 0.5
-
-  K_epochs: 80
-  eps_clip: 0.2
-  gamma: 1.0
 
 llm_agent:
   model_name: gpt-3.5-turbo
 
 general:
   back_every_steps: 2
-  experiment_name: 'gpt-3.5-turbo-reticl-maxlen-2-0514-mix'
+  experiment_name: 'gpt-3.5-turbo-promptpg-maxlen-2-0514-mix'
 
 train:
   n_epochs: 20
   batch_size: 256
-
-  lr_actor: 0.0003
-  lr_critic: 0.001
-  lr_encode: 0.001
+  learning_rate: 0.001
+  
 
 valid:
   batch_size: 2056

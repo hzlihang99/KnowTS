@@ -1,7 +1,6 @@
-import re
 import os
 import sys
-import pickle
+import argparse
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -10,11 +9,8 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from Tools.utils import textlist_openaiembed, textlist_sbertembed
 
 import torch
-import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-import torch.nn.functional as F
-
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
@@ -22,18 +18,21 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
         
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser(description='main')
+    parser.add_argument('--label_path', type=str, required=True)
+    parser.add_argument('--model_name', type=str, required=True)
+    args = parser.parse_args()
+
     num_epochs = 20
     num_workers = 4
     batch_size = 4
     learning_rate = 0.0001
 
-    # model_name = "google-bert/bert-large-uncased"
-    model_name = "t5-large"
-    # model_name = "roberta-large"
+    model_name = args.model_name
 
     device = 'cuda'
     
-    label_path = '../Data_Paper/test_sample_data_0509_split_0-reinforce-0514.tsv'
+    label_path = args.label_path
     label_data = pd.read_csv(label_path, sep='\t')
 
     train_data = label_data[label_data['demon_flag']==1]
