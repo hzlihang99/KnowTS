@@ -44,6 +44,7 @@ if __name__ == "__main__":
     parser.add_argument("--local_cache",  action='store_true', help='search and insert cache in local machine.')
     parser.add_argument("--search_cache", action='store_true', help='search cache for LLM inference result.')
     parser.add_argument("--insert_cache", action='store_true', help='insert the LLM result into cache.')
+    parser.add_argument("--run_id", type=str, default=None, help='runid, used for multiple run and average result')
     args = parser.parse_args()
 
     model_name = args.model_name
@@ -170,11 +171,11 @@ if __name__ == "__main__":
     test_data['model_judge'] = model_judge
     test_data['model_reason'] = model_reason
 
-    save_path = '../Data_Paper/{}-{}-{}-{}-{}shot-{}.tsv'.format(
+    save_path = '../../Save/{}-{}-{}-{}-{}shot-rid{}.tsv'.format(
         os.path.basename(label_path).split('.tsv')[0], fewshot_set,
         os.path.basename(model_name).lower(), prompt_style,
         fewshot_flag + ('' if fewshot_flag=='zero' else '_{}'.format(str(fewshot_size))), 
-        date.today().strftime("%m%d")
+        args.run_id
     )
     print('result save to ', save_path)
     test_data.to_csv(save_path, index=False, sep='\t')

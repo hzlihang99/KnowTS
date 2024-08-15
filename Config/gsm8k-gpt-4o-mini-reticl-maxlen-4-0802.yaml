@@ -1,7 +1,6 @@
 data:
-  fewshot_set: 'mix'
-  fewshot_maxsize: 2
-  label_path: "../../Data/MathKnowCT.tsv"
+  fewshot_maxsize: 4
+  label_path: "../../Data/GSM8K.tsv"
 
 ppo_agent:
   model_name: 'lstm'
@@ -9,21 +8,17 @@ ppo_agent:
   hidden_dim: 64
   n_layers: 2
   dropout: 0.5
-  
-  rewards_0: 1.0
-  rewards_1: 1.0
 
   K_epochs: 80
   eps_clip: 0.2
-  gamma: 0.99
+  gamma: 1.0
 
 llm_agent:
-  model_name: meta-llama/Meta-Llama-3-8B-Instruct
-  batch_size: 4
+  model_name: gpt-4o-mini
 
 general:
   back_every_steps: 2
-  experiment_name: 'llama3-8b-2reward-11-ppo-lstm-gamma-0.99-maxlen-2-0514-mix'
+  experiment_name: 'gsm8k-gpt-4o-mini-reticl-maxlen-4-0802'
 
 train:
   n_epochs: 20

@@ -100,7 +100,7 @@ def prepare_zerohot(request_text, style='cot'):
     if style == 'regular':
         system_text = ["You are a knowledge concept annotator.",
                        "Your job is to judge whether the <Question> is concerning the <Knowledge>.",
-                       "The judgement token: '<Yes>' or '<No>' should be provided at the start of the response.",]
+                       "Please respond with <Yes> or <No>.",]
     elif style == 'reason':
         system_text = ["You are a knowledge concept annotator.",
                        "Your job is to judge whether the <Question> is concerning the <Knowledge>.",

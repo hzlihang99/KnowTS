@@ -161,8 +161,8 @@ if __name__=="__main__":
             for batch_data in batch_progress:
                 
                 # apply this for avoiding select the demonstration from other knowledges
-                query_demon_mask = torch.Tensor([[x == y for y in demon_data['query']] \
-                                                for x in batch_data['query']]).float().to(device)
+                query_demon_mask = torch.Tensor([[x == y for y in demon_data['tag_code']] \
+                                                for x in batch_data['tag_code']]).float().to(device)
                 query_question_input = batch_data['question_embed'].to(device)
                 query_knowledge_input = batch_data['knowledge_embed'].to(device)
 
@@ -175,7 +175,7 @@ if __name__=="__main__":
                 print('start to interact with LLM...')
                 messages_list = []
                 for i in range(batch_index.shape[0]):
-                    query = batch_data['query'][i]
+                    query = batch_data['tag_code'][i]
                     query_knowledge = batch_data['query_instruction_english'][i]
                     query_question = batch_data['problem_clean_english'][i]
                     request_text = text2prompt(query_knowledge, query_question)
@@ -191,9 +191,11 @@ if __name__=="__main__":
                     for j, k in enumerate(demon_index):
                         if k < 0:
                             break # once proceed with <EOS> just jump it away
+                        demon_knowledge = demon_data['query_instruction_english'].iloc[k]
                         demon_question = demon_data['problem_clean_english'].iloc[k]
                         demon_response = demon_data['expert_reason'].iloc[k]
-                        request_text = text2prompt(query_knowledge, query_question)
+                        assert demon_knowledge == query_knowledge
+                        request_text = text2prompt(query_knowledge, demon_question)
                         messages.insert(-1, {"role": "user", "content":request_text})
                         messages.insert(-1, {"role": "assistant", "content":demon_response})
                         if 'mistralai' in llm_model:
@@ -259,7 +261,7 @@ if __name__=="__main__":
                     # interact with the LLM and calculate the rewards
                     messages_list = []
                     for i in range(batch_index.shape[0]):
-                        query = batch_data['query'][i]
+                        query = batch_data['tag_code'][i]
                         query_knowledge = batch_data['query_instruction_english'][i]
                         query_question = batch_data['problem_clean_english'][i]
                         request_text = text2prompt(query_knowledge, query_question)
@@ -271,7 +273,7 @@ if __name__=="__main__":
                         for k in demon_index:
                             demon_question = demon_data['problem_clean_english'].iloc[k]
                             demon_response = demon_data['expert_reason'].iloc[k]
-                            request_text = text2prompt(query_knowledge, query_question)
+                            request_text = text2prompt(query_knowledge, demon_question)
                             messages.insert(-1, {"role": "user", "content":request_text})
                             messages.insert(-1, {"role": "assistant", "content":demon_response})
                         
@@ -313,8 +315,8 @@ if __name__=="__main__":
             
             for batch_data in tqdm(valid_loader, desc="Inferring Batch"):
 
-                qd_mask = torch.Tensor([[x == y for y in demon_data['query']] \
-                                        for x in batch_data['query']]).float().to(device)
+                qd_mask = torch.Tensor([[x == y for y in demon_data['tag_code']] \
+                                        for x in batch_data['tag_code']]).float().to(device)
                 qq_input = batch_data['question_embed'].to(device)
                 qk_input = batch_data['knowledge_embed'].to(device)
                 dq_input = demon_question_embed
@@ -333,7 +335,7 @@ if __name__=="__main__":
                 print('start to interact with LLM...')
                 messages_list = []
                 for i in range(batch_index.shape[0]):
-                    query = batch_data['query'][i]
+                    query = batch_data['tag_code'][i]
                     query_knowledge = batch_data['query_instruction_english'][i]
                     query_question = batch_data['problem_clean_english'][i]
                     request_text = text2prompt(query_knowledge, query_question)
@@ -345,7 +347,7 @@ if __name__=="__main__":
                             break # once proceed with <EOS> just jump it away
                         demon_question = demon_data['problem_clean_english'].iloc[k]
                         demon_response = demon_data['expert_reason'].iloc[k]
-                        request_text = text2prompt(query_knowledge, query_question)
+                        request_text = text2prompt(query_knowledge, demon_question)
                         messages.insert(-1, {"role": "user", "content":request_text})
                         messages.insert(-1, {"role": "assistant", "content":demon_response})
                     

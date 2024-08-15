@@ -1,18 +1,17 @@
 data:
-  fewshot_set: 'mix'
-  fewshot_maxsize: 2
-  label_path: "../../Data/MathKnowCT.tsv"
+  fewshot_maxsize: 4
+  label_path: "../../Data/GSM8K.tsv"
 
 retriver:
   input_dim: 1536
   hidden_dim: 64
 
 llm_agent:
-  model_name: gpt-3.5-turbo
+  model_name: gpt-4o-mini
 
 general:
   back_every_steps: 2
-  experiment_name: 'gpt-3.5-turbo-promptpg-maxlen-2-0514-mix'
+  experiment_name: 'gsm8k-gpt-4o-mini-promptpg-maxlen-4-0802'
 
 train:
   n_epochs: 20

@@ -1,6 +1,6 @@
 data:
   fewshot_set: 'mix'
-  fewshot_maxsize: 2
+  fewshot_maxsize: 4
   label_path: "../../Data/MathKnowCT.tsv"
 
 retriver:
@@ -9,11 +9,11 @@ retriver:
 
 llm_agent:
   model_name: mistralai/Mistral-7B-Instruct-v0.2
-  batch_size: 8
+  batch_size: 4
 
 general:
   back_every_steps: 2
-  experiment_name: 'mistral-7b-promptpg-maxlen-2-0514-mix'
+  experiment_name: 'mistral-7b-promptpg-maxlen-4-0514-mix'
 
 train:
   n_epochs: 20

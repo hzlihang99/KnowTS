@@ -1,7 +1,7 @@
 data:
   fewshot_set: 'mix'
   fewshot_maxsize: 2
-  label_path: "../../Data/data.tsv"
+  label_path: "../../Data/MathKnowCT.tsv"
 
 ppo_agent:
   model_name: 'lstm'
