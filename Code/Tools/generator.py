@@ -1,8 +1,9 @@
 import os
+import torch
 import numpy as np
 from tqdm import tqdm
 import concurrent.futures
-from datetime import date, datetime
+from datetime import datetime
 
 from transformers import AutoModelForCausalLM
 from transformers import AutoTokenizer
@@ -74,10 +75,16 @@ class LocalGenerator(BaseGenerator):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.tokenizer.pad_token = self.tokenizer.eos_token
         self.tokenizer.padding_side = 'left'
-        self.model = AutoModelForCausalLM.from_pretrained(
-            self.model_name, device_map='auto', 
-            max_memory=max_memory, torch_dtype="auto"
-        )
+        if self.model_name == 'openbmb/MiniCPM-2B-sft-bf16':
+            self.model = AutoModelForCausalLM.from_pretrained(
+                self.model_name, device_map='auto', 
+                torch_dtype=torch.bfloat16, trust_remote_code=True
+            )
+        else:
+            self.model = AutoModelForCausalLM.from_pretrained(
+                self.model_name, device_map='auto', 
+                max_memory=max_memory, torch_dtype="auto"
+            )
 
     def generate(self, messages_list):
         ready_list, target_list = self.search(messages_list)

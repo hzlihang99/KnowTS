@@ -8,9 +8,9 @@ from datetime import date, datetime
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-import multiprocessing as mp
-from google.cloud import translate_v2 as translate
-translate_client = translate.Client()
+# import multiprocessing as mp
+# from google.cloud import translate_v2 as translate
+# translate_client = translate.Client()
 
 from openai import OpenAI
 openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
@@ -76,19 +76,19 @@ def textlist_sbertembed(text_list, model_name, batch_size=1024):
     return np.array([output_dict[x] for x in text_list])
 
 
-def run_translate(source_text, target_language = 'en', cache_db = None):
-    mongodb_records = []
-    if cache_db is not None:
-        mongodb_records = list(cache_db.find({'source_text':source_text}))
-    if len(mongodb_records) == 0:
-        response = translate_client.translate(source_text, target_language)
-        response = response['translatedText']
-        cache_db.insert_one({"source_text": source_text, 
-                             "response":response, "target_language": target_language, 
-                             "time":datetime.now().replace(microsecond=0)})
-    else:
-        response = sorted(mongodb_records, key=lambda x: x['time'], reverse=True)[0]['response']
-    return source_text, response
+# def run_translate(source_text, target_language = 'en', cache_db = None):
+#     mongodb_records = []
+#     if cache_db is not None:
+#         mongodb_records = list(cache_db.find({'source_text':source_text}))
+#     if len(mongodb_records) == 0:
+#         response = translate_client.translate(source_text, target_language)
+#         response = response['translatedText']
+#         cache_db.insert_one({"source_text": source_text, 
+#                              "response":response, "target_language": target_language, 
+#                              "time":datetime.now().replace(microsecond=0)})
+#     else:
+#         response = sorted(mongodb_records, key=lambda x: x['time'], reverse=True)[0]['response']
+#     return source_text, response
 
 
 def text2prompt(knowledge, question):
