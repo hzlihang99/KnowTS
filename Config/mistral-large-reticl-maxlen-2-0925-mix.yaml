@@ -1,0 +1,34 @@
+data:
+  fewshot_set: 'mix'
+  fewshot_maxsize: 2
+  label_path: "../../Data/MathKnowCT.tsv"
+
+ppo_agent:
+  model_name: 'lstm'
+  input_dim: 1536
+  hidden_dim: 64
+  n_layers: 2
+  dropout: 0.5
+
+  K_epochs: 80
+  eps_clip: 0.2
+  gamma: 1.0
+
+llm_agent:
+  model_name: mistralai/Mistral-Large-Instruct-2407
+  batch_size: 16
+
+general:
+  back_every_steps: 2
+  experiment_name: 'mistral-large-reticl-maxlen-2-0925-mix'
+
+train:
+  n_epochs: 20
+  batch_size: 256
+
+  lr_actor: 0.0003
+  lr_critic: 0.001
+  lr_encode: 0.001
+
+valid:
+  batch_size: 2056
